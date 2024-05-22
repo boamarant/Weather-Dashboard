@@ -1,28 +1,40 @@
-const apiKey = '33ea370c10b643eed038712704d4f87d'; // Replace with your OpenWeatherMap API key
+const apiKey = '33ea370c10b643eed038712704d4f87d'; // Uses my api key as a variable
 
 document.getElementById('search-btn').addEventListener('click', function() {
     const city = document.getElementById('city-input').value;
-    getWeatherData(city);
-    saveSearchHistory(city);
-    displaySearchHistory();
+    getWeatherData(city, function(isValid) {
+        if (isValid) {
+            saveSearchHistory(city);
+            displaySearchHistory();
+        }
+    });
 });
 
-function getWeatherData(city) {
+function getWeatherData(city, callback) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`)
         .then(function(response) {
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
             return response.json();
         })
         .then(function(currentWeatherData) {
             return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`)
                 .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('City not found');
+                    }
                     return response.json();
                 })
                 .then(function(forecastData) {
                     displayWeather(currentWeatherData, forecastData);
+                    callback(true); // City is valid
                 });
         })
         .catch(function(error) {
-            alert('City not found!');
+            alert(error.message);
+            removeInvalidCityFromHistory(city);
+            callback(false); // City is invalid
         });
 }
 
@@ -71,10 +83,20 @@ function displaySearchHistory() {
         cityElement.textContent = city;
         cityElement.className = 'history-item';
         cityElement.addEventListener('click', function() {
-            getWeatherData(city);
+            getWeatherData(city, function() {}); // Callback does nothing here
         });
         searchHistoryContainer.appendChild(cityElement);
     });
+}
+
+function removeInvalidCityFromHistory(city) {
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    const index = searchHistory.indexOf(city);
+    if (index > -1) {
+        searchHistory.splice(index, 1);
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        displaySearchHistory();
+    }
 }
 
 // Initial display of search history
