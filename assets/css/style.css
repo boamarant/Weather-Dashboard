@@ -1,3 +1,8 @@
+:root{
+    --silver: rgb(187, 187, 187);
+    --navy: rgb(1, 1, 61);
+}
+
 body {
     font-family: Arial, sans-serif;
     background: #f0f0f0;
@@ -13,7 +18,7 @@ header {
     width: 100%;
     text-align: center;
     padding: 20px 0;
-    background-color: darkblue;
+    background-color: var(--navy);
     color: white;
     margin-bottom: 20px;
 }
@@ -61,7 +66,7 @@ header {
 
 .weather-info {
     width: 65%;
-    background: white;
+    background: rgb(187, 187, 187);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -74,11 +79,12 @@ header {
 }
 
 .forecast-item {
-    background: #f0f0f0;
+    background: var(--navy);
+    color: white;
     padding: 10px;
-    border-radius: 4px;
     text-align: center;
     width: 18%;
+    border: 10px solid rgb(187, 187, 187);
 }
 
 .search-section {

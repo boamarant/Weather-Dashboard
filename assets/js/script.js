@@ -1,9 +1,9 @@
 const apiKey = '33ea370c10b643eed038712704d4f87d'; // Uses my api key as a variable
 
 document.getElementById('search-btn').addEventListener('click', function() {
-    const city = document.getElementById('city-input').value;
-    getWeatherData(city, function(isValid) {
-        if (isValid) {
+    const city = document.getElementById('city-input').value; 
+    getWeatherData(city, function(isValid) { 
+        if (isValid) { //Saves search history if a valid city is entered
             saveSearchHistory(city);
             displaySearchHistory();
         }
@@ -11,15 +11,15 @@ document.getElementById('search-btn').addEventListener('click', function() {
 });
 
 function getWeatherData(city, callback) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`) //Calls the API to find current conditions
         .then(function(response) {
             if (!response.ok) {
-                throw new Error('City not found');
+                throw new Error('City not found'); //Checks for errors to ensure invalid searches are not included in search history
             }
             return response.json();
         })
         .then(function(currentWeatherData) {
-            return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`)
+            return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`) //Calls the API to find 5 day forecast
                 .then(function(response) {
                     if (!response.ok) {
                         throw new Error('City not found');
@@ -33,7 +33,7 @@ function getWeatherData(city, callback) {
         })
         .catch(function(error) {
             alert(error.message);
-            removeInvalidCityFromHistory(city);
+            removeInvalid(city);
             callback(false); // City is invalid
         });
 }
@@ -41,9 +41,10 @@ function getWeatherData(city, callback) {
 function displayWeather(currentWeather, forecast) {
     document.getElementById('city-name').textContent = currentWeather.name + ' (' + new Date().toLocaleDateString() + ')';
     document.getElementById('current-weather').innerHTML = `
-        Temp: ${currentWeather.main.temp}°F<br>
-        Wind: ${currentWeather.wind.speed} MPH<br>
-        Humidity: ${currentWeather.main.humidity}%
+        <img src="http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png" alt="Weather Icon">
+        <p>Temp: ${currentWeather.main.temp}°F</p>
+        <p>Wind: ${currentWeather.wind.speed} MPH</p>
+        <p>Humidity: ${currentWeather.main.humidity}%</p>
     `;
 
     const forecastContainer = document.getElementById('forecast');
@@ -57,6 +58,7 @@ function displayWeather(currentWeather, forecast) {
         forecastElement.className = 'forecast-item';
         forecastElement.innerHTML = `
             <p>${forecastDate}</p>
+            <img src="http://openweathermap.org/img/wn/${forecastItem.weather[0].icon}.png" alt="Weather Icon">
             <p>Temp: ${forecastItem.main.temp}°F</p>
             <p>Wind: ${forecastItem.wind.speed} MPH</p>
             <p>Humidity: ${forecastItem.main.humidity}%</p>
@@ -89,7 +91,7 @@ function displaySearchHistory() {
     });
 }
 
-function removeInvalidCityFromHistory(city) {
+function removeInvalid(city) {
     let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
     const index = searchHistory.indexOf(city);
     if (index > -1) {
