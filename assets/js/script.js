@@ -22,7 +22,7 @@ function getWeatherData(city, callback) {
             return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`) //Calls the API to find 5 day forecast
                 .then(function(response) {
                     if (!response.ok) {
-                        throw new Error('City not found');
+                        throw new Error('City not found'); //Checks for errors to ensure invalid searches are not included in search history
                     }
                     return response.json();
                 })
@@ -39,7 +39,7 @@ function getWeatherData(city, callback) {
 }
 
 function displayWeather(currentWeather, forecast) {
-    document.getElementById('city-name').textContent = currentWeather.name + ' (' + new Date().toLocaleDateString() + ')';
+    document.getElementById('city-name').textContent = currentWeather.name + ' (' + new Date().toLocaleDateString() + ')'; //Creates current weather item
     document.getElementById('current-weather').innerHTML = `
         <img src="http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png" alt="Weather Icon">
         <p>Temp: ${currentWeather.main.temp}°F</p>
@@ -47,15 +47,18 @@ function displayWeather(currentWeather, forecast) {
         <p>Humidity: ${currentWeather.main.humidity}%</p>
     `;
 
-    const forecastContainer = document.getElementById('forecast');
+    const forecastContainer = document.getElementById('forecast'); //Creates container for 5 day forecast items
     forecastContainer.innerHTML = '';
+
+    const forecastHeader = document.getElementById('forecast-header'); //Creates header for the 5 day forecast
+    forecastHeader.textContent = '5-Day Forecast:';
 
     for (let i = 0; i < forecast.list.length; i += 8) {
         const forecastItem = forecast.list[i];
         const forecastDate = new Date(forecastItem.dt * 1000).toLocaleDateString();
 
         const forecastElement = document.createElement('div');
-        forecastElement.className = 'forecast-item';
+        forecastElement.className = 'forecast-item'; //Creates each item for the 5 day forecast
         forecastElement.innerHTML = `
             <p>${forecastDate}</p>
             <img src="http://openweathermap.org/img/wn/${forecastItem.weather[0].icon}.png" alt="Weather Icon">
@@ -68,30 +71,30 @@ function displayWeather(currentWeather, forecast) {
 }
 
 function saveSearchHistory(city) {
-    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || []; //Creates array and saves search history to local storage
     if (!searchHistory.includes(city)) {
         searchHistory.push(city);
         localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
 }
 
-function displaySearchHistory() {
+function displaySearchHistory() { //Allows search history to be called and display information again when clicked
     let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
     const searchHistoryContainer = document.getElementById('search-history');
     searchHistoryContainer.innerHTML = '';
 
     searchHistory.forEach(function(city) {
-        const cityElement = document.createElement('button');
+        const cityElement = document.createElement('button'); //Allows search history to be clicked
         cityElement.textContent = city;
         cityElement.className = 'history-item';
-        cityElement.addEventListener('click', function() {
-            getWeatherData(city, function() {}); // Callback does nothing here
+        cityElement.addEventListener('click', function() { //Lets data re-appear when history is clicked
+            getWeatherData(city, function() {});
         });
         searchHistoryContainer.appendChild(cityElement);
     });
 }
 
-function removeInvalid(city) {
+function removeInvalid(city) { //Removes invalid cities from the search history array
     let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
     const index = searchHistory.indexOf(city);
     if (index > -1) {
