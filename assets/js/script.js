@@ -14,7 +14,7 @@ function getWeatherData(city, callback) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`) //Calls the API to find current conditions
         .then(function(response) {
             if (!response.ok) {
-                throw new Error('City not found'); //Checks for errors to ensure invalid searches are not included in search history
+                throw new Error('City not found'); //Checks for errors to ensure invalid searches are not included in search history. Throw is used for error handling.
             }
             return response.json();
         })
@@ -22,7 +22,7 @@ function getWeatherData(city, callback) {
             return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`) //Calls the API to find 5 day forecast
                 .then(function(response) {
                     if (!response.ok) {
-                        throw new Error('City not found'); //Checks for errors to ensure invalid searches are not included in search history
+                        throw new Error('City not found'); //Checks for errors to ensure invalid searches are not included in search history. Throw is used for error handling.
                     }
                     return response.json();
                 })

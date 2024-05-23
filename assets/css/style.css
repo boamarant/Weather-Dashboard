@@ -3,6 +3,8 @@
     --navy: rgb(1, 1, 61);
 }
 
+/* Generic Body Styling */
+
 body {
     font-family: Arial, sans-serif;
     background: #f0f0f0;
@@ -14,6 +16,8 @@ body {
     height: 100vh;
 }
 
+/* Header */
+
 header {
     width: 100%;
     text-align: center;
@@ -23,12 +27,16 @@ header {
     margin-bottom: 20px;
 }
 
+/* Generic Main Content Styling */
+
 .main-content {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     width: 80%;
 }
+
+/* Search Field Styling */
 
 .search-section {
     display: flex;
@@ -50,6 +58,8 @@ header {
     margin-bottom: 10px;
 }
 
+/* Search Button Styling */
+
 #search-btn {
     padding: 5px 10px;
     border: none;
@@ -64,6 +74,8 @@ header {
     background: #0056b3;
 }
 
+/* Current Weather Styling */
+
 .weather-info {
     width: 65%;
     background: rgb(187, 187, 187);
@@ -71,6 +83,8 @@ header {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+/* 5 Day Forecast Container and Item Styling */
 
 .forecast-container {
     display: flex;
@@ -87,17 +101,7 @@ header {
     border: 10px solid rgb(187, 187, 187);
 }
 
-.search-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 30%;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+/* Search History Styling */
 
 #search-history {
     margin-top: 20px;
